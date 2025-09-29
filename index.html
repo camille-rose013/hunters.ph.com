@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JobFinder — Meet Opportunity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Nunito:wght@700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#" aria-label="JobFinder Home">
+        <span class="logo-mark">🔎</span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a class="active" href="#">Home</a></li>
+          <li><a href="content/index.html">Find Jobs</a></li>
+          <li><a href="content/index.html">Companies</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <a class="link" href="login/login.html">Log in</a>
+        <a class="btn btn-pill" href="#post">Post Job</a>
+      </div>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu"></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <article class="hero-copy">
+          <p class="eyebrow">People Search:</p>
+          <h1 id="hero-title">Got talent? <br />Meet opportunity</h1>
+          <p class="subtitle">Company reviews, Salaries, Interviews, Jobs</p>
+
+          <form class="search" role="search" aria-label="Job Search">
+            <label class="field">
+              <img src="assets/images/search.svg" alt="" />
+              <input type="search" placeholder="Jobs title or keywords" />
+            </label>
+            <label class="field">
+              <span class="location-dot" aria-hidden="true"></span>
+              <input type="text" placeholder="All Location" />
+            </label>
+            <button class="btn btn-search" type="submit">Search</button>
+          </form>
+
+          <p class="popular-searches">
+            Popular Searches: <a href="#">Data Management</a>, <a href="#">Marketing Manager</a>, <a href="#">Customer
+              Support</a>
+          </p>
+        </article>
+        <aside class="hero-image" aria-label="Highlights">
+          <div class="profile-circle">
+            <img
+              src="https://images.pexels.com/photos/840996/pexels-photo-840996.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=600"
+              alt="Smiling professional working on a laptop" class="profile-img" />
+            <div class="stat-badge stat-badge-1">
+              <div class="stat-number">75k+</div>
+              <div class="stat-text">remote job listings<br />available today</div>
+            </div>
+            <div class="stat-badge stat-badge-2">
+              <div class="stat-number">5k+</div>
+              <div class="stat-text">fake &amp; low quality<br />jobs removed daily</div>
+            </div>
+            <div class="stat-badge stat-badge-3">
+              <div class="stat-number">2k+</div>
+              <div class="stat-text">new jobs<br />posted daily</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- COMPANIES -->
+    <section class="companies" id="companies" aria-labelledby="companies-title">
+      <div class="container">
+        <div class="companies-bar">
+          <span class="dot"></span>
+          <span class="label"><strong>Urgently hiring</strong> Top Companies Hiring Remotely</span>
+          <div class="logo-row">
+            <img src="assets/images/top-companies.svg" alt="Logos: Google, Amazon, RCBC, Accenture" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPLIT FEATURE -->
+    <section class="split-feature" aria-label="Audience">
+      <div class="container split-grid">
+        <article class="panel for-employers">
+          <h2>For Employers</h2>
+          <p>Find Professionals from around the world and across all skills</p>
+          <a class="btn btn-cta" href="#">Post jobs for Free</a>
+          <img class="panel-illo" src="assets/images/employer-illustration.svg" alt="Employer illustration" />
+        </article>
+        <article class="panel for-candidates">
+          <h2>For Candidate</h2>
+          <p>Build your professional profile, find new job opportunities.</p>
+          <a class="btn btn-cta" href="#">Upload your CV</a>
+          <img class="panel-illo" src="assets/images/candidate-illustration.svg" alt="Candidate illustration" />
+        </article>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories" aria-labelledby="categories-title">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <h2 id="categories-title">Popular category</h2>
+            <p class="meta">2025 jobs live • 293 added today</p>
+          </div>
+          <a class="link" href="#">View all categories</a>
+        </header>
+
+        <div class="carousel">
+          <button class="carousel-nav prev" aria-label="Previous"><img src="assets/images/arrow-left.svg"
+              alt="" /></button>
+          <div class="cat-grid">
+            <article class="cat-card">
+              <div class="icon"><img src="assets/images/code-badge.svg" alt="" /></div>
+              <h3>Development &amp; IT</h3>
+              <p class="count">16k jobs</p>
+              <p class="hint">Frontend, Backend, web and app developer jobs</p>
+            </article>
+            <article class="cat-card">
+              <div class="icon"><img src="assets/images/megaphone.svg" alt="" /></div>
+              <h3>Marketing and Sales</h3>
+              <p class="count">12k jobs</p>
+              <p class="hint">Advertising, digital marketing and brand...</p>
+            </article>
+            <article class="cat-card">
+              <div class="icon"><img src="assets/images/pen-tool.svg" alt="" /></div>
+              <h3>Design &amp; Creative</h3>
+              <p class="count">13k jobs</p>
+              <p class="hint">Graphic, digital, web, and product design jobs</p>
+            </article>
+            <article class="cat-card">
+              <div class="icon"><img src="assets/images/headphones.svg" alt="" /></div>
+              <h3>Customer Service</h3>
+              <p class="count">24k jobs</p>
+              <p class="hint">Customer experience and account management jobs</p>
+            </article>
+          </div>
+          <button class="carousel-nav next" aria-label="Next"><img src="assets/images/arrow-right.svg"
+              alt="" /></button>
+        </div>
+        <div class="dots" aria-hidden="true">
+          <img src="assets/images/dot.svg" alt="" /><img src="assets/images/dot.svg" alt="" /><img
+            src="assets/images/dot.svg" alt="" /><img src="assets/images/dot.svg" alt="" /><img
+            src="assets/images/dot.svg" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <!-- JOBS -->
+    <section class="jobs" aria-labelledby="jobs-title" id="jobs">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <h2 id="jobs-title">Popular Jobs</h2>
+            <p class="meta">2025 jobs live • 293 added today</p>
+          </div>
+          <a class="link" href="#">View all jobs</a>
+        </header>
+
+        <div class="job-grid">
+          <article class="job-card">
+            <header>
+              <h3>SR Backend Go Developer</h3>
+              <button class="wish" aria-label="Save job"><img src="assets/images/heart.svg" alt="" /></button>
+            </header>
+            <p class="byline">by <strong>Uxper</strong> in <a href="#" class="pill pill-link">Development &amp; IT</a>
+            </p>
+            <ul class="tags" role="list">
+              <li class="pill">San Francisco</li>
+              <li class="pill price">$100-200/month</li>
+            </ul>
+            <p class="deadline">150 days left to apply</p>
+          </article>
+
+          <article class="job-card">
+            <header>
+              <h3>UX/UI Designer</h3>
+              <button class="wish" aria-label="Save job"><img src="assets/images/heart.svg" alt="" /></button>
+            </header>
+            <p class="byline">by <strong>Nightfall</strong> in <a href="#" class="pill pill-link">Design &amp;
+                Creative</a></p>
+            <ul class="tags" role="list">
+              <li class="pill ghost">Remote</li>
+              <li class="pill">San Francisco</li>
+              <li class="pill price">$100-200/month</li>
+            </ul>
+            <p class="deadline">150 days left to apply</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2025 JobFinder. Crafted for the exercise.</p>
+    </div>
+  </footer>
+</body>
+
+</html>

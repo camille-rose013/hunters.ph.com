@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hunter – Job Listing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container navbar">
+      <div class="nav-left">
+        <button class="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+        <a class="brand" href="../index.html" aria-label="Hunter home">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#222" />
+                <stop offset="1" stop-color="#111" />
+              </linearGradient>
+            </defs>
+            <circle cx="16" cy="18" r="9" fill="url(#g)" />
+            <rect x="5" y="28" width="22" height="10" rx="5" fill="#111" />
+            <circle cx="35" cy="29" r="7" fill="#111" />
+            <rect x="39" y="33" width="8" height="4" rx="2" fill="#111" />
+          </svg>
+        </a>
+      </div>
+      <div class="nav-right">
+        <button class="lang" aria-label="Language">EN</button>
+        <button class="icon-btn" aria-label="Mail">
+          <svg width="26" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <polyline points="3,6 12,13 21,6"></polyline>
+          </svg>
+        </button>
+        <button class="icon-btn" aria-label="Notifications">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 01-3.46 0"></path>
+          </svg>
+          <span class="badge">1</span>
+        </button>
+        <a class="user" href="../profile/profile.html">Ruby Grace</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search strip -->
+  <section class="search-strip" aria-label="search">
+    <div class="container search-row">
+      <label class="input-group" aria-label="Search jobs">
+        <span class="search-ico" aria-hidden="true"></span>
+        <input type="text" placeholder="Search for a job title or company" />
+        <button class="search-btn" type="button">Search</button>
+      </label>
+      <label class="input-group" aria-label="Location">
+        <span class="pin" aria-hidden="true"></span>
+        <input type="text" placeholder="Location" />
+        <i class="caret" aria-hidden="true"></i>
+      </label>
+      <div class="chips" aria-label="quick filters">
+        <button class="chip">Remote Work</button>
+        <button class="chip">Hybrid</button>
+        <button class="chip">Fresh Grad</button>
+      </div>
+    </div>
+    <div class="container filters-row" role="navigation" aria-label="Filters">
+      <button class="filter">Job Level <span class="down" aria-hidden="true"></span></button>
+      <button class="filter">Employment Type <span class="down" aria-hidden="true"></span></button>
+      <button class="filter">Job Function <span class="down" aria-hidden="true"></span></button>
+      <button class="filter">Education <span class="down" aria-hidden="true"></span></button>
+      <button class="filter">Company <span class="down" aria-hidden="true"></span></button>
+      <button class="filter">Salary <span class="down" aria-hidden="true"></span></button>
+    </div>
+  </section>
+
+  <main class="jobs-main" role="main">
+    <div class="container two-col">
+      <!-- Results list -->
+      <section class="results" aria-labelledby="results-heading">
+        <h2 id="results-heading" class="visually-hidden">Job results</h2>
+        <div class="list" role="list">
+          <!-- Selected Card -->
+          <article class="job-card selected" role="listitem">
+            <header class="job-head">
+              <h3 class="job-title">Solutions Engineer</h3>
+              <button class="love loved" aria-label="Saved job"><span class="heart" aria-hidden="true"></span></button>
+            </header>
+            <p class="company"><a href="#">AboitizPower</a></p>
+            <p class="place">Makati, Philippines</p>
+            <p class="meta">Posted about 1 month ago · Apply before 13 Oct<br />Recruiter was hiring 4 days ago</p>
+            <div class="tags"><span class="pill alt">Top 50</span><span class="pill">Hybrid</span></div>
+          </article>
+
+          <article class="job-card" role="listitem">
+            <header class="job-head">
+              <h3 class="job-title">Apple iOS Developer</h3>
+              <button class="love" aria-label="Save job"><span class="heart outline" aria-hidden="true"></span></button>
+            </header>
+            <p class="company"><a href="#">LeapFroggr Inc.</a></p>
+            <p class="place">Manila, Philippines</p>
+            <p class="meta">Posted about 9 month ago · Apply before 6 Jan<br />Recruiter was hiring 4 days ago</p>
+            <div class="tags"><span class="pill">Remote</span></div>
+          </article>
+
+          <article class="job-card" role="listitem">
+            <header class="job-head">
+              <h3 class="job-title">Android Developer</h3>
+              <button class="love" aria-label="Save job"><span class="heart outline" aria-hidden="true"></span></button>
+            </header>
+            <p class="company"><a href="#">LeapFroggr Inc.</a></p>
+            <p class="place">Manila, Philippines</p>
+            <p class="meta">Posted about 9 month ago · Apply before 6 Jan<br />Recruiter was hiring 4 days ago</p>
+            <div class="tags"><span class="pill">Remote</span></div>
+          </article>
+
+          <article class="job-card" role="listitem">
+            <header class="job-head">
+              <h3 class="job-title">Data Engineer</h3>
+              <button class="love" aria-label="Save job"><span class="heart outline" aria-hidden="true"></span></button>
+            </header>
+            <p class="company"><a href="#">LeapFroggr Inc.</a></p>
+            <p class="place">Manila, Philippines</p>
+            <p class="meta">Posted about 9 month ago · Apply before 6 Jan<br />Recruiter was hiring 4 days ago</p>
+            <div class="tags"><span class="pill">Remote</span></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Details pane -->
+      <aside class="details" aria-labelledby="detail-title">
+        <div class="hero">
+          <div class="ribbon"><span>Serious MD</span></div>
+        </div>
+
+        <article class="detail-card">
+          <header class="detail-head">
+            <div class="left">
+              <h2 id="detail-title">Apple iOS Developer</h2>
+              <p class="company-line"><a href="#">LeapFroggr Inc.</a></p>
+              <p class="summary">Manila, Philippines • Full time • <span class="pill tiny">Remote</span></p>
+            </div>
+            <p class="posted">Posted about 9 month ago and deadline of application is on 6 Jan<br />Recruiter was hiring
+              4 days ago</p>
+          </header>
+
+          <div class="cta-row">
+            <button class="btn-primary">Apply Now</button>
+            <button class="btn-ghost"><span class="ico heart" aria-hidden="true"></span> Save</button>
+            <button class="btn-ghost"><span class="ico share" aria-hidden="true"></span> Share</button>
+          </div>
+
+          <section class="jd" aria-labelledby="jd-heading">
+            <h3 id="jd-heading">Job Description</h3>
+            <p>The Position is responsible for developing B2B and B2C iOS Apps.</p>
+            <p>The person is responsible for developing native iOS applications that runs on both iPhone and iPad. The
+              person should be able to translate the company’s needs into functional and appealing interactive
+              applications.</p>
+
+            <h4>Responsibilities</h4>
+            <ul class="bullets">
+              <li>Collaborate closely with product and design to ship features on time</li>
+              <li>Write modern, scalable Swift with a focus on performance and UX</li>
+              <li>Maintain quality with code reviews, testing, and documentation</li>
+            </ul>
+          </section>
+        </article>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">© 2025 Hunter. All rights reserved.</div>
+  </footer>
+</body>
+
+</html>

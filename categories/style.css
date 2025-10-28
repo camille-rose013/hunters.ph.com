@@ -68,10 +68,78 @@ header.site-header {
 main { padding: 18px 0 36px; }
 .section { margin-top: 12px; }
 .section h2 { font-size: 28px; line-height: 1.2; margin: 10px 0 18px; font-weight: 800; }
+.section-description { font-size: 16px; color: var(--muted); margin-bottom: 24px; }
 .separator { height: 1px; background: #efefef; margin: 18px 0 6px; }
 
 /* ========== Category Grid ========== */
-.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+/* Category Card (New Design) */
+.category-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 28px 20px;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  min-height: 200px;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent);
+  background: #fffef8;
+}
+
+.category-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.category-name {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  color: var(--text);
+}
+
+.category-description {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 16px;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.category-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  background: var(--chip);
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-top: auto;
+}
+
+/* Loading Message */
+.loading-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* Old card styles (keeping for backwards compatibility) */
 .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow); height: 88px; display: grid; place-items: center; text-align: center; padding: 10px; }
 .card a { color: #111; text-decoration: none; font-weight: 800; font-size: 18px; line-height: 1.2; }
 .card a.underline { text-decoration: underline; text-underline-offset: 3px; }

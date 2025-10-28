@@ -275,6 +275,16 @@ body {
     border-radius: 8px 8px 0 0;
 }
 
+/* Collapsible card header */
+.card-header[data-bs-toggle="collapse"] {
+    cursor: pointer;
+    user-select: none;
+}
+
+.card-header[data-bs-toggle="collapse"]:hover {
+    background-color: #e2e8f0;
+}
+
 .section-title {
     font-size: 16px;
     font-weight: 600;

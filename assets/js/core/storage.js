@@ -45,15 +45,32 @@
  * Central storage keys definition
  * Using a constant object prevents typos and makes keys easy to update
  * All keys are prefixed with 'huntersite_' to avoid conflicts with other apps
+ *
+ * IMPORTANT: Employer and Job Seeker data are completely separate
  */
 const STORAGE_KEYS = {
+  // Common (all users)
   USER: "huntersite_user",
+  STORAGE_VERSION: "huntersite_storage_version",
+
+  // Job Seeker specific
+  JOBSEEKER_SAVED_JOBS: "huntersite_jobseeker_saved_jobs",
+  JOBSEEKER_SEARCH_HISTORY: "huntersite_jobseeker_search_history",
+  JOBSEEKER_APPLICATIONS: "huntersite_jobseeker_applications",
+  JOBSEEKER_PROFILE: "huntersite_jobseeker_profile",
+  JOBSEEKER_PROFILE_METADATA: "huntersite_jobseeker_profile_metadata",
+
+  // Employer specific
+  EMPLOYER_JOBS: "employer_jobs", // Jobs posted by employers
+  EMPLOYER_PROFILE: "huntersite_employer_profile",
+  EMPLOYER_COMPANY_INFO: "huntersite_employer_company",
+
+  // Legacy keys (for backward compatibility - will be migrated)
   SAVED_JOBS: "huntersite_saved_jobs",
   SEARCH_HISTORY: "huntersite_search_history",
   APPLICATIONS: "huntersite_applications",
   USER_PROFILE: "huntersite_user_profile",
-  PROFILE_METADATA: "huntersite_profile_metadata", // Track last update, data source
-  STORAGE_VERSION: "huntersite_storage_version", // For future migrations
+  PROFILE_METADATA: "huntersite_profile_metadata",
 };
 
 // Storage configuration constants
@@ -134,8 +151,18 @@ function saveToStorage(key, data) {
  */
 async function loadProfileData() {
   try {
+    const user = getCurrentUser();
+
+    // Determine which profile key to use based on user type
+    let profileKey;
+    if (user && user.userType === "employer") {
+      profileKey = STORAGE_KEYS.EMPLOYER_PROFILE;
+    } else {
+      profileKey = STORAGE_KEYS.JOBSEEKER_PROFILE;
+    }
+
     // Check localStorage first
-    const localProfile = getFromStorage(STORAGE_KEYS.USER_PROFILE);
+    const localProfile = getFromStorage(profileKey);
     const metadata = getFromStorage(STORAGE_KEYS.PROFILE_METADATA);
 
     // If we have local data, use it
@@ -144,20 +171,31 @@ async function loadProfileData() {
       return localProfile;
     }
 
-    // Otherwise, load from JSON and cache it
-    console.log("📄 Loading profile from JSON (first time)");
-    const response = await fetch(DEFAULT_JSON_PATHS.PROFILE);
+    // Otherwise, load from JSON and cache it (only for job seekers)
+    if (!user || user.userType !== "employer") {
+      console.log("📄 Loading profile from JSON (first time)");
+      const response = await fetch(DEFAULT_JSON_PATHS.PROFILE);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const jsonProfile = await response.json();
+
+      // Cache to localStorage for next time (don't use saveUserProfile to avoid recursion)
+      saveToStorage(profileKey, jsonProfile);
+      saveToStorage(STORAGE_KEYS.PROFILE_METADATA, {
+        lastUpdated: new Date().toISOString(),
+        source: "json_load",
+        version: STORAGE_VERSION,
+        userType: user?.userType || "jobseeker",
+      });
+
+      return jsonProfile;
     }
 
-    const jsonProfile = await response.json();
-
-    // Cache to localStorage for next time
-    saveUserProfile(jsonProfile);
-
-    return jsonProfile;
+    // For employers without profile, return default
+    return getDefaultProfileStructure();
   } catch (error) {
     console.error("Error loading profile data:", error);
 
@@ -417,9 +455,36 @@ function saveUserLogin(email, userType = "jobseeker") {
 
 /**
  * Log out current user
- * Simply removes user data from storage
+ * Clears user data and user-type-specific data based on their role
  */
 function logoutUser() {
+  const user = getCurrentUser();
+
+  if (user) {
+    // Clear user-type specific data
+    if (user.userType === "jobseeker") {
+      // Clear job seeker data
+      localStorage.removeItem(STORAGE_KEYS.JOBSEEKER_SAVED_JOBS);
+      localStorage.removeItem(STORAGE_KEYS.JOBSEEKER_SEARCH_HISTORY);
+      localStorage.removeItem(STORAGE_KEYS.JOBSEEKER_APPLICATIONS);
+      localStorage.removeItem(STORAGE_KEYS.JOBSEEKER_PROFILE);
+      localStorage.removeItem(STORAGE_KEYS.JOBSEEKER_PROFILE_METADATA);
+
+      // Clear legacy keys
+      localStorage.removeItem(STORAGE_KEYS.SAVED_JOBS);
+      localStorage.removeItem(STORAGE_KEYS.SEARCH_HISTORY);
+      localStorage.removeItem(STORAGE_KEYS.APPLICATIONS);
+      localStorage.removeItem(STORAGE_KEYS.USER_PROFILE);
+      localStorage.removeItem(STORAGE_KEYS.PROFILE_METADATA);
+    } else if (user.userType === "employer") {
+      // Clear employer data (but NOT their posted jobs)
+      localStorage.removeItem(STORAGE_KEYS.EMPLOYER_PROFILE);
+      localStorage.removeItem(STORAGE_KEYS.EMPLOYER_COMPANY_INFO);
+      // Note: employer_jobs is kept so jobs remain available
+    }
+  }
+
+  // Always clear user session
   localStorage.removeItem(STORAGE_KEYS.USER);
 }
 
@@ -432,15 +497,36 @@ function isLoggedIn() {
 }
 
 // ============================================
-// JOB SAVING FUNCTIONS
+// JOB SAVING FUNCTIONS (Job Seeker Only)
 // ============================================
 
 /**
- * Get all jobs saved by the current user
- * @returns {Array} Array of saved job objects (empty array if none)
+ * Get the correct storage key based on user type
+ * @returns {string} Storage key to use
+ */
+function getSavedJobsKey() {
+  const user = getCurrentUser();
+  // Only job seekers can save jobs
+  if (user && user.userType === "jobseeker") {
+    return STORAGE_KEYS.JOBSEEKER_SAVED_JOBS;
+  }
+  // Fallback for backward compatibility
+  return STORAGE_KEYS.SAVED_JOBS;
+}
+
+/**
+ * Get all jobs saved by the current user (Job Seeker only)
+ * @returns {Array} Array of saved job objects (empty array if none or not job seeker)
  */
 function getSavedJobs() {
-  return getFromStorage(STORAGE_KEYS.SAVED_JOBS) || [];
+  const user = getCurrentUser();
+
+  // Only job seekers can have saved jobs
+  if (!user || user.userType !== "jobseeker") {
+    return [];
+  }
+
+  return getFromStorage(getSavedJobsKey()) || [];
 }
 
 /**
@@ -454,13 +540,24 @@ function getSavedJobs() {
  * @returns {Object} Result object with success flag and message
  *
  * Process:
- * 1. Get current saved jobs
- * 2. Check if job already saved (prevent duplicates)
- * 3. Add savedDate timestamp
- * 4. Save updated list back to storage
+ * 1. Check if user is job seeker
+ * 2. Get current saved jobs
+ * 3. Check if job already saved (prevent duplicates)
+ * 4. Add savedDate timestamp
+ * 5. Save updated list back to storage
  */
 function saveJob(jobData) {
   try {
+    const user = getCurrentUser();
+
+    // Only job seekers can save jobs
+    if (!user || user.userType !== "jobseeker") {
+      return {
+        success: false,
+        message: "Only job seekers can save jobs",
+      };
+    }
+
     const savedJobs = getSavedJobs();
 
     // Prevent duplicate saves - check if job ID already exists
@@ -473,9 +570,10 @@ function saveJob(jobData) {
     savedJobs.push({
       ...jobData, // Spread existing job data
       savedDate: new Date().toISOString(), // Add when it was saved
+      savedBy: user.email, // Track who saved it
     });
 
-    const success = saveToStorage(STORAGE_KEYS.SAVED_JOBS, savedJobs);
+    const success = saveToStorage(getSavedJobsKey(), savedJobs);
     return {
       success: success,
       message: success ? "Job saved successfully" : "Failed to save job",
@@ -487,18 +585,28 @@ function saveJob(jobData) {
 }
 
 /**
- * Remove a job from user's saved list
+ * Remove a job from user's saved list (Job Seeker only)
  *
  * @param {string} jobId - ID of job to remove
  * @returns {Object} Result object with success flag and message
  */
 function removeSavedJob(jobId) {
   try {
+    const user = getCurrentUser();
+
+    // Only job seekers can have saved jobs
+    if (!user || user.userType !== "jobseeker") {
+      return {
+        success: false,
+        message: "Only job seekers can save/remove jobs",
+      };
+    }
+
     const savedJobs = getSavedJobs();
     // Filter out the job with matching ID
     const filtered = savedJobs.filter((job) => job.id !== jobId);
 
-    const success = saveToStorage(STORAGE_KEYS.SAVED_JOBS, filtered);
+    const success = saveToStorage(getSavedJobsKey(), filtered);
     return {
       success: success,
       message: success ? "Job removed from saved list" : "Failed to remove job",
@@ -584,7 +692,18 @@ function getSearchHistory() {
  */
 function saveApplication(jobId, jobTitle, company) {
   try {
-    const applications = getFromStorage(STORAGE_KEYS.APPLICATIONS) || [];
+    const user = getCurrentUser();
+
+    // Only job seekers can submit applications
+    if (!user || user.userType !== "jobseeker") {
+      return {
+        success: false,
+        message: "Only job seekers can submit applications",
+      };
+    }
+
+    const applications =
+      getFromStorage(STORAGE_KEYS.JOBSEEKER_APPLICATIONS) || [];
 
     // Prevent applying to same job twice
     const exists = applications.find((app) => app.jobId === jobId);
@@ -597,11 +716,15 @@ function saveApplication(jobId, jobTitle, company) {
       jobId: jobId,
       jobTitle: jobTitle,
       company: company,
+      appliedBy: user.email,
       appliedDate: new Date().toISOString(),
       status: "pending", // Initial status
     });
 
-    const success = saveToStorage(STORAGE_KEYS.APPLICATIONS, applications);
+    const success = saveToStorage(
+      STORAGE_KEYS.JOBSEEKER_APPLICATIONS,
+      applications
+    );
     return {
       success: success,
       message: success
@@ -645,18 +768,29 @@ function hasAppliedToJob(jobId) {
  */
 function saveUserProfile(profileData, isPartialUpdate = false) {
   try {
+    const user = getCurrentUser();
+
+    // Determine which profile key to use based on user type
+    let profileKey;
+    if (user && user.userType === "employer") {
+      profileKey = STORAGE_KEYS.EMPLOYER_PROFILE;
+    } else {
+      // Default to job seeker profile
+      profileKey = STORAGE_KEYS.JOBSEEKER_PROFILE;
+    }
+
     let dataToSave = profileData;
 
     // If partial update, merge with existing data
     if (isPartialUpdate) {
-      const existingProfile = getFromStorage(STORAGE_KEYS.USER_PROFILE);
+      const existingProfile = getFromStorage(profileKey);
       if (existingProfile) {
         dataToSave = deepMerge(existingProfile, profileData);
       }
     }
 
     // Save profile data
-    const success = saveToStorage(STORAGE_KEYS.USER_PROFILE, dataToSave);
+    const success = saveToStorage(profileKey, dataToSave);
 
     // Save metadata (timestamp, source)
     if (success) {
@@ -664,6 +798,7 @@ function saveUserProfile(profileData, isPartialUpdate = false) {
         lastUpdated: new Date().toISOString(),
         source: "user_edit",
         version: STORAGE_VERSION,
+        userType: user?.userType || "jobseeker",
       });
     }
 
@@ -687,7 +822,18 @@ function saveUserProfile(profileData, isPartialUpdate = false) {
  * @returns {Object} Profile object with all user fields
  */
 function getUserProfile() {
-  const profile = getFromStorage(STORAGE_KEYS.USER_PROFILE);
+  const user = getCurrentUser();
+
+  // Determine which profile key to use based on user type
+  let profileKey;
+  if (user && user.userType === "employer") {
+    profileKey = STORAGE_KEYS.EMPLOYER_PROFILE;
+  } else {
+    // Default to job seeker profile
+    profileKey = STORAGE_KEYS.JOBSEEKER_PROFILE;
+  }
+
+  const profile = getFromStorage(profileKey);
 
   if (profile) {
     return profile;

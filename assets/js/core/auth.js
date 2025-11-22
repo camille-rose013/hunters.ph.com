@@ -136,20 +136,38 @@ function setupUserTypeSelector() {
   // Check if selector already exists
   if (document.querySelector(".user-type-selector")) return;
 
+  // Check URL parameters to see if user type should be pre-selected
+  const urlParams = new URLSearchParams(window.location.search);
+  const preselectedType = urlParams.get("as"); // e.g., ?as=employer
+
+  // Determine which type should be checked by default
+  let defaultType = "jobseeker";
+  if (preselectedType === "employer" || preselectedType === "admin") {
+    defaultType = preselectedType;
+  }
+
   // Create user type selector
   const selector = document.createElement("div");
   selector.className = "user-type-selector mb-3";
   selector.innerHTML = `
     <p class="small mb-2">I am a:</p>
     <div class="btn-group w-100" role="group">
-      <input type="radio" class="btn-check" name="userType" id="typeJobseeker" value="jobseeker" checked>
+      <input type="radio" class="btn-check" name="userType" id="typeJobseeker" value="jobseeker" ${
+        defaultType === "jobseeker" ? "checked" : ""
+      }>
       <label class="btn btn-outline-primary" for="typeJobseeker">Job Seeker</label>
       
-      <input type="radio" class="btn-check" name="userType" id="typeEmployer" value="employer">
+      <input type="radio" class="btn-check" name="userType" id="typeEmployer" value="employer" ${
+        defaultType === "employer" ? "checked" : ""
+      }>
       <label class="btn btn-outline-primary" for="typeEmployer">Employer</label>
       
-      <input type="radio" class="btn-check" name="userType" id="typeAdmin" value="admin">
+      <!-- Admin option commented out - not implemented yet
+      <input type="radio" class="btn-check" name="userType" id="typeAdmin" value="admin" ${
+        defaultType === "admin" ? "checked" : ""
+      }>
       <label class="btn btn-outline-primary" for="typeAdmin">Admin</label>
+      -->
     </div>
   `;
 
@@ -164,10 +182,10 @@ function redirectAfterLogin(userType) {
   // Redirect based on user type
   switch (userType) {
     case "employer":
-      window.location.href = "../categories/index.html"; // Employer dashboard
+      window.location.href = "../employer/dashboard.html"; // Employer dashboard
       break;
     case "admin":
-      window.location.href = "../categories/index.html"; // Admin panel
+      window.location.href = "../admin/dashboard.html"; // Admin panel
       break;
     default:
       window.location.href = "../job-listing/job-listing.html"; // Job listings

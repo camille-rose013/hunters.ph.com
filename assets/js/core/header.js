@@ -88,24 +88,43 @@
   async function updateHeaderUserName() {
     try {
       // Check if StorageManager is available
-      if (!window.StorageManager || !window.StorageManager.loadProfileData) {
+      if (!window.StorageManager) {
         console.warn("StorageManager not available for header");
         return;
       }
 
-      // Load profile data
-      const profile = await window.StorageManager.loadProfileData();
+      // First try to get current user (works for all user types)
+      const currentUser = window.StorageManager.getCurrentUser();
 
-      if (profile && profile.basicInfo && profile.basicInfo.name) {
-        // Update all user name elements in header
+      if (currentUser) {
+        // Use name or email for display
+        const displayName = currentUser.name || currentUser.email || "User";
         const userNameElements = document.querySelectorAll(
           ".user-name, .user, .nav-right .user"
         );
         userNameElements.forEach((el) => {
           if (el) {
-            el.textContent = profile.basicInfo.name;
+            el.textContent = displayName;
           }
         });
+        return; // Exit early if we have current user
+      }
+
+      // Fallback: Try to load profile data for job seekers
+      if (window.StorageManager.loadProfileData) {
+        const profile = await window.StorageManager.loadProfileData();
+
+        if (profile && profile.basicInfo && profile.basicInfo.name) {
+          // Update all user name elements in header
+          const userNameElements = document.querySelectorAll(
+            ".user-name, .user, .nav-right .user"
+          );
+          userNameElements.forEach((el) => {
+            if (el) {
+              el.textContent = profile.basicInfo.name;
+            }
+          });
+        }
       }
     } catch (error) {
       console.error("Error updating header user name:", error);
